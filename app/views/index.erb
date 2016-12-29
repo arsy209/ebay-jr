@@ -1,0 +1,38 @@
+<div class="container">
+  <h1><u>Singh's Auction Site!</u></h1>
+  <% if !logged_in? %>
+  <h2> Please log in or register to have full access </h2>
+  <% else %>
+  <h2> Latest Items on sale: </h2>
+  <% end %>
+  <br>
+  <% @items.each do |item| %>
+    <% if Time.now < item.end_time %>
+      <div class="item-design">
+        <div id="item-content">
+          <h3><a href="/items/<%=item.id%>"><%=item.name%></a></h3>
+          <h4>Seller: <a href="/users/<%=item.seller.id%>"><%=item.seller.username%></a></h4>
+          <p>Item Desciption: <%=item.description%></p>
+          <span id="price-label">Current Price:</span> <span id="price">$<%=item.price%></span>
+          <p>
+            <% time_left = ((item.end_time - Time.now) / 3600) / 24 %>
+            <% if time_left < 1.00 %>
+              This item's auction ends in <%=(time_left * 24).round%> hours
+            <% elsif time_left * 24 < 1.00 %>
+               This item's auction ends in <%=(time_left * 24 * 60).round%> minutes
+            <% else %>
+              This item's auction ends in <%=(time_left).round%> days
+            <% end %>
+          </p>
+          <% if item.bids.length > 0 %>
+            <p> Current Highest Bidder: <a href="/users/<%=item.bids.last.bidder.id%>"><%= item.bids.last.bidder.username %></a></p>
+            <p><a href="/items/<%=item.id%>"> Bid Now!</a></p>
+          <% else %>
+            <p><a href="/items/<%=item.id%>"> Be the first to bid!</a></p>
+          <% end %>
+        </div>
+      </div>
+    <br><br><br>
+    <% end %>
+  <% end %>
+</div>

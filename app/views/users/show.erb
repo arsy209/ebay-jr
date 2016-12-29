@@ -1,0 +1,134 @@
+<div class="container">
+  <h1 class="user-full-name"><%= @user.first_name %> <%= @user.last_name %> | (<%=@user.username%>)</h1>
+  <p class="user-email">Email: <a href="mailto:<%= @user.email %>?Subject=Inquiring%20about%20your%20listed%20item" target="_top"><%= @user.email %></a></p>
+  <p class="user-location">Current Location: <%= @user.location %></p>
+  <p class="profile-views">
+    Profile views: <%= @user.view_count %>
+  </p>
+  <p class="account-created">
+    Account created on <%= @user.created_at %>
+  </p>
+
+  <% if logged_in? %>
+    <% if current_user.id == @user.id %>
+      <form class="" action="/users/<%= @user.id %>/edit" method="get">
+        <input class="button" type="submit" value="Edit your profile!">
+      </form>
+      <br>
+      <form class="create-item" action="/items/new" method="get">
+        <input class="button" type="submit" value="List an Item">
+      </form>
+    <% end %>
+  <% end %>
+
+  <br><br><br>
+  <% if @user.id != current_user.id %>
+  <h2><%=@user.first_name%>'s Listed Items</h2>
+  <% else %>
+  <h2>Your Listed Items</h2>
+  <% end %>
+
+  <% if !@user.items_to_sell.empty? %>
+    <% @user.items_to_sell.each do |item|%>
+    <div class="item-design">
+      <div id="item-content">
+      <h3><strong>Title: </strong><a href="/items/<%=item.id%>"><%=item.name%></a></h3>
+        <span id="price-label">Current Price:</span> <span id="price">$<%=item.price%></span>
+        <p>
+          <% time_left = ((item.end_time - Time.now) / 3600) / 24 %>
+          <% if time_left < 1.00 %>
+            This item's auction ends in <%=(time_left * 24).round%> hours
+          <% elsif time_left * 24 < 1.00 %>
+             This item's auction ends in <%=(time_left * 24 * 60).round%> minutes
+          <% else %>
+            This item's auction ends in <%=(time_left).round%> days
+          <% end %>
+        </p>
+        <% if current_user.id == @user.id %>
+        <form class="edit-item" action="/items/<%=item.id%>/edit" method="get">
+          <input class="button" type="submit" value="Edit this Item">
+        </form>
+        <br>
+        <form class="delete-item" action="/items/<%=item.id%>" method="post">
+          <input type="hidden" name="_method" value="delete">
+          <input class="button" type="submit" value="Delete this Item">
+        </form>
+        <% end %>
+        <br>
+      </div>
+    </div>
+    <br><br>
+    <% end %>
+  <% end %>
+
+
+  <br><span>----------------------------------------------------------------------------------------------------------------------------------------------------------------------------</span><br>
+  <div class = "container">
+  <% if @user.id != current_user.id %>
+  <h2><%=@user.first_name%>'s Bidded on Items</h2>
+  <% else %>
+  <h2>Your Bidded on Items</h2>
+  <% end %>
+
+  <% @user.bidded_items.each do |item| %>
+  <div class="item-design">
+    <div id="item-content">
+      <h3><a href="/items/<%=item.id%>"><%= item.name %></a></h3>
+      <h4>listed by <a href="/users/<%=item.seller.id%>"><%=item.seller.username%></a></h4>
+      <p>Item Desciption: <%= item.description %></p>
+      <span id="price-label">Current Price:</span> <span id="price">$<%=item.price%></span>
+      <p>
+        <% time_left = ((item.end_time - Time.now) / 3600) / 24 %>
+        <% if time_left < 1.00 %>
+          This item's auction ends in <%=(time_left * 24).round%> hours
+        <% elsif time_left * 24 < 1.00 %>
+           This item's auction ends in <%=(time_left * 24 * 60).round%> minutes
+        <% else %>
+          This item's auction ends in <%=(time_left).round%> days
+        <% end %>
+      </p>
+      <% if item.bids.length > 0 %>
+        <p> Current Highest Bidder: <a href="/users/<%=item.bids.last.bidder.id%>"><%= item.bids.last.bidder.username %></a></p>
+      <% else %>
+        <p><a href="/items/<%=item.id%>"> Be the first to bid!</a></p>
+      <% end %>
+      <br>
+      </div>
+    </div>
+    <br><br>
+  <% end %>
+
+
+  <br><span>----------------------------------------------------------------------------------------------------------------------------------------------------------------------------</span><br><br>
+  <% if @user.id != current_user.id %>
+  <h2><%=@user.first_name%>'s Items Won</h2>
+  <% else %>
+  <h2>Your Items Won</h2>
+  <% end %>
+
+
+  <% @user.bidded_items.each do |item| %>
+    <% if Time.now > item.end_time && item.bids.last.bidder.id == @user.id%>
+    <div class="item-design">
+      <div id="item-content">
+        <h3><a href="/items/<%=item.id%>"><%=item.name%></a> | listed by <a href="/users/<%=item.seller.id%>"><%=item.seller.username%></a></h3>
+        <p>Item Desciption: <%=item.description%></p>
+        <span id="price-label">Final Price:</span> <span id="price">$<%=item.price%></span>
+
+        <p>
+          <% time_left = ((item.end_time - Time.now) / 3600) / 24 %>
+          <% if time_left < 1.00 %>
+            This item's auction ended <%=((time_left * 24).round * -1)%> hours ago.
+          <% elsif time_left * 24 < 1.00 %>
+             This item's auction ended <%=((time_left * 24 * 60).round * -1)%> minutes ago.
+          <% else %>
+            This item's auction ended <%=((time_left).round * -1)%> days ago.
+          <% end %>
+        </p>
+        <br>
+      </div>
+    </div>
+    <br><br>
+    <% end %>
+  <% end %>
+</div>

@@ -1,0 +1,14 @@
+<div class="container">
+
+<h1 >Registered Users</h1>
+
+
+  <p class="regular-list">
+    <% @users.each do |user| %>
+    	<span>~~~~~~~~~~~~~~~~~~~~~~~</span>
+    	<ul>
+      <li class="each-user"><div class="user-box"><%= user.first_name %> <%= user.last_name %><br><a href="/users/<%= user.id %>"><%= user.username %></a></div></li>
+      </ul>
+    <% end %>
+  </p>
+</div>

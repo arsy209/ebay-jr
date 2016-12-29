@@ -1,0 +1,84 @@
+<div class="container">
+  <h2><%=@item.name%> </h2>
+   <h3>listed by: <a href="/users/<%=@item.seller.id%>"><%=@item.seller.username%></a></h3>
+  
+  <span id="price-label">Current Price:</span> <span id="price">$<%=@item.price%></span>
+  <strong><p><u>Total Bids so far: <%= @item.bids.length %></p></u></strong>
+  <p>
+    <% time_since_listing = (((Time.now - @item.start_time) / 3600) / 24) %>
+    <% if time_since_listing > 1.00 %>
+      This item's auction was created <%= time_since_listing.round %> day(s) ago.
+    <% elsif time_since_listing < 1.00 && time_since_listing * 24 > 1.00 %>
+      This item's auction was created <%=(time_since_listing * 24).round%> hours ago.
+    <% elsif time_since_listing * 24 < 1.00 && time_since_listing * 24 * 60 > 1.00 %>
+       This item's auction was created <%=(time_since_listing * 24 * 60).round%> minutes ago.
+    <% else %>
+      This item's auction was created <%=(time_since_listing * 60 * 60).round%> seconds ago.
+    <% end %>
+  </p>
+  <p>
+    <% time_left = (((@item.end_time - Time.now) / 3600) / 24)%>
+    <% if time_left < 1.00 %>
+      This item's auction ends in <%=(time_left * 24).round%> hours
+    <% elsif time_left * 24 < 1.00 %>
+       This item's auction ends in <%=(time_left * 24 * 60).round%> minutes
+    <% else %>
+      This item's auction ends in <%=(time_left).round%> days
+    <% end %>
+  </p>
+
+  <% if @item.bids.length > 0 %>
+    <p> Current Highest Bidder: <a href="/users/<%=@item.bids.last.bidder.id%>"><%= @item.bids.last.bidder.username %></a></p>
+  <% else %>
+    <p> Be the first to bid!</p>
+  <% end %>
+
+  <% if current_user.id == @item.seller.id %>
+    <form class="edit-item" action="/items/<%=@item.id%>/edit" method="get">
+      <input class="button" type="submit" value="Edit this Item">
+    </form>
+    <br>
+    <form class="delete-item" action="/items/<%=@item.id%>" method="post">
+      <input type="hidden" name="_method" value="delete">
+      <input class="button" type="submit" value="Delete this Item">
+    </form>
+  <% end %>
+  <br>
+  <% if @errors %>
+    <ul>
+    <% @errors.each do |error| %>
+
+      <li><%= error %></li>
+      <% end %>
+    </ul>
+    <% end %>
+  <% if logged_in? %>
+    <% if Time.now < @item.end_time %>
+      <% if current_user.id != @item.seller.id %>
+        <form class="bid-on-item" action="/items/<%=@item.id%>/bids/new" method="post">
+          <input name="bid_amount" type="number" step="any">
+          <br>
+          <p> Remember your bid must be higher than the current price </p>
+          <br>
+          <input class="button" type="submit" value="Submit Bid">
+        </form>
+      <% else %>
+        <p> Silly, you can't bid on your own item </p>
+      <% end %>
+    <% else %>
+      <p> Bidding on this item has ended </p>
+    <% end %>
+  <% end %>
+  <br><br>
+
+
+  <h3>Latest Bids for this item:</h3>
+    <% @item.bids.order(created_at: :desc).each do |bid| %>
+      <p><a href="/users/<%=bid.bidder.id%>"><%= bid.bidder.username %></a></p>
+
+      <span id="price-label">Their bid amount:</span> <span id="price">$<%= bid.bid_amount %></span>
+      <p>----------------------------------------------------</p>
+      <br>
+    <% end %>
+
+</div>

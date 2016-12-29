@@ -1,0 +1,41 @@
+<div class="container">
+  <h1 class="new-item">New Product:</h1><br>
+  <% if @errors %>
+  <ul>
+  <% @errors.each do |error| %>
+
+    <li><%= error %></li>
+    <% end %>
+  </ul>
+  <% end %>
+  <form class="new-item-form" action="/items" method="post">
+    <table class="new-item-form">
+      <tr>
+        <td><label for="item[name]">Item Name:</label></td>
+        <td>&nbsp;&nbsp;&nbsp;</td>
+        <td><input name="item[name]" type="text"></td>
+      </tr>
+      <tr>
+        <td><label for="item[description]">Item Description:</label></td>
+        <td>&nbsp;&nbsp;&nbsp;</td>
+        <td><textarea name="item[description]" type="text"></textarea></td>
+      </tr>
+      <tr>
+        <td><label for="item[price]">Starting Price:</label></td>
+        <td>&nbsp;&nbsp;&nbsp;</td>
+        <td><input name="item[price]" type="number" step="any"></td>
+      </tr>
+      <tr>
+        <td><label for="item[start_time]">Starting Time:</label></td>
+        <td>&nbsp;&nbsp;&nbsp;</td>
+        <td><input name="item[start_time]" type="datetime-local"></td>
+      </tr>
+      <tr>
+        <td><label for="item[end_time]">Ending Time:</label></td>
+        <td>&nbsp;&nbsp;&nbsp;</td>
+        <td><input name="item[end_time]" type="datetime-local"></td>
+      </tr>
+    </table>
+      <br><input class="button" type="submit" value="Create item!">
+  </form>
+</div>

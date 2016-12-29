@@ -1,0 +1,47 @@
+<div class="container">
+  <h1 class="register-login-header">Edit your account!</h1><br>
+  <% if @errors %>
+  <ul>
+  <% @errors.each do |error| %>
+
+    <li><%= error %></li>
+    <% end %>
+  </ul>
+  <% end %>
+  <form class="edit-forms" action="/users/<%=@user.id%>" method="post">
+    <input type="hidden" name="_method" value="put">
+    <table class="edit-forms">
+      <tr>
+        <td><label for="user[first_name]">First Name:</label></td>
+        <td>&nbsp;&nbsp;&nbsp;</td>
+        <td><input name="user[first_name]" type="text" value="<%= @user.first_name%>"></td>
+      </tr>
+      <tr>
+        <td><label for="user[last_name]">Last Name:</label></td>
+        <td>&nbsp;&nbsp;&nbsp;</td>
+        <td><input name="user[last_name]" type="text" value="<%=@user.last_name%>"></td>
+      </tr>
+      <tr>
+        <td><label for="user[location]">Location:</label></td>
+        <td>&nbsp;&nbsp;&nbsp;</td>
+        <td><input name="user[location]" type="text" value="<%=@user.location%>"></td>
+      </tr>
+      <tr>
+        <td><label for="user[username]">Username:</label></td>
+        <td>&nbsp;&nbsp;&nbsp;</td>
+        <td><input name="user[username]" type="text" value="<%=@user.username%>"></td>
+      </tr>
+      <tr>
+        <td><label for="user[email]">Email:</label></td>
+        <td>&nbsp;&nbsp;&nbsp;</td>
+        <td><input name="user[email]" type="email" value="<%=@user.email%>"></td>
+      </tr>
+      <tr>
+        <td><label for="user[password]">Password:</label></td>
+        <td>&nbsp;&nbsp;&nbsp;</td>
+        <td><input name="user[password]" type="password" value="<%=@user.password%>"></td>
+      </tr>
+    </table>
+      <br><input type="submit" value="Update User!">
+  </form>
+</div>
