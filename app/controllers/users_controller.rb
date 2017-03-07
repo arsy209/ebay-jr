@@ -32,26 +32,6 @@ get '/users/:id' do
   erb :'users/show'
 end
 
-# get '/users/:id/edit' do
-#   @user = User.find(params[:id])
-#   if current_user.id == @user.id
-#     erb :'users/edit'
-#   else
-#     redirect "/users/#{@user.id}"
-#   end
-# end
-
-# put '/users/:id' do
-#   user = User.find_by(id: params[:id])
-#   user.assign_attributes(params[:user])
-#   if user.save
-#     redirect "/users/#{user.id}"
-#   else
-#     @errors = user.errors.full_messages
-#     user = User.find(params[:id])
-#     erb :'users/edit'
-#   end
-# end
 get '/users/:id/edit' do
   @user = User.find(params[:id])
   if current_user.id == @user.id
